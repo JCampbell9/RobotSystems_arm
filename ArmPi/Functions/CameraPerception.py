@@ -22,7 +22,7 @@ if sys.version_info.major == 2:
 
 class Perception:
 
-    def __init__(self, target_color=('red',)):
+    def __init__(self, target_color=('red', 'blue', 'green')):
 
         self.target_color = target_color
         self.range_rgb = {
