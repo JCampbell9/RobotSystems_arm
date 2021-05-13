@@ -22,7 +22,7 @@ if sys.version_info.major == 2:
 
 class Perception:
 
-    def __init__(self, init_image, target_color=('red',)):
+    def __init__(self, target_color=('red',)):
 
         self.target_color = target_color
         self.range_rgb = {
@@ -53,9 +53,9 @@ class Perception:
         self.start_pick_up = False
         self.start_count_t1 = True
         
-        self.img = init_image
-        self.img_copy = self.img.copy()
-        self.img_dim = self.img.shape[:2]
+        #self.img = init_image
+        #self.img_copy = self.img.copy()
+        #self.img_dim = self.img.shape[:2]
         self.block_coordinates = (0, 0)
 
     def main(self, img):
@@ -155,9 +155,9 @@ class Perception:
     def draw_roi_indicators(self, detect_color, box):
 
 
-        cv2.drawContours(self.img, [box], -1, range_rgb[detect_color], 2)
+        cv2.drawContours(self.img, [box], -1, self.range_rgb[detect_color], 2)
         cv2.putText(self.img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, range_rgb[detect_color], 1)  # Draw center point
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1)  # Draw center point
 
 
 
@@ -169,7 +169,7 @@ if __name__ == '__main__':
     my_camera = Camera.Camera()
     my_camera.camera_open()
     img = my_camera.frame
-    camera_perception = Perception(img)
+    camera_perception = Perception()
 
     while True:
 
