@@ -32,12 +32,13 @@ class Perception:
             'black': (0, 0, 0),
             'white': (255, 255, 255)}
         
-        self.roi = []
-        self.rect = []
+        self.roi = ()
+        self.rect = None
+        self.size = (640, 480)
         self.world_x = 0
         self.world_y = 0
-        # self.world_Y
-        # self.world_X
+        self.world_Y = 0
+        self.world_X = 0
 
 
         self.count = 0
@@ -68,7 +69,7 @@ class Perception:
 
         if self.get_roi and self.start_pick_up:
             self.get_roi = False
-            frame_gb = getMaskROI(frame_gb, self.roi, size)
+            frame_gb = getMaskROI(frame_gb, self.roi, self.size)
 
         frame_lab = self.convert_to_lab(frame_gb)
 
@@ -99,7 +100,7 @@ class Perception:
 
     def frame_resize(self):
         
-        frame_resize = cv2.resize(self.img_copy, size, interpolation=cv2.INTER_NEAREST)
+        frame_resize = cv2.resize(self.img_copy, self.size, interpolation=cv2.INTER_NEAREST)
         frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
         return frame_gb
     
@@ -147,8 +148,8 @@ class Perception:
     
     def get_block_location(self):
 
-        img_centerx, img_centery = getCenter(self.rect, self.roi, size, square_length)  # Get the center coordinates of the block
-        self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size)  # Convert to real world coordinates
+        img_centerx, img_centery = getCenter(self.rect, self.roi, self.size, square_length)  # Get the center coordinates of the block
+        self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, self.size)  # Convert to real world coordinates
 
 
     def draw_roi_indicators(self, detect_color, box):
