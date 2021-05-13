@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # coding=utf8
 import sys
-sys.path.append('/home/pi/ArmPi/')
+# sys.path.append('/home/pi/ArmPi/')
+sys.path.append('/Users/socce/Desktop/git_repos/RobotSystems_arm/ArmPi/')
 import cv2
 import time
 import Camera
@@ -66,7 +67,7 @@ def setBuzzer(timer):
     time.sleep(timer)
     Board.setBuzzer(0)
 
-#设置扩展板的RGB灯颜色使其跟要追踪的颜色一致
+# 设置扩展板的RGB灯颜色使其跟要追踪的颜色一致
 def set_rgb(color):
     if color == "red":
         Board.RGB.setPixelColor(0, Board.PixelColor(255, 0, 0))
@@ -317,7 +318,7 @@ def run(img):
      
     frame_resize = cv2.resize(img_copy, size, interpolation=cv2.INTER_NEAREST)
     frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
-    #如果检测到某个区域有识别到的物体，则一直检测该区域直到没有为止
+    # 如果检测到某个区域有识别到的物体，则一直检测该区域直到没有为止
     if get_roi and start_pick_up:
         get_roi = False
         frame_gb = getMaskROI(frame_gb, roi, size)    
