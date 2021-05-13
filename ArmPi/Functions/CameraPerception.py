@@ -32,13 +32,13 @@ class Perception:
             'black': (0, 0, 0),
             'white': (255, 255, 255)}
         
-        self.roi
-        self.rect
-        self.world_x
-        self.world_y
-        self.world_X
-        self.world_Y
-        self.box
+        self.roi = []
+        self.rect = []
+        self.world_x = 0
+        self.world_y = 0
+        # self.world_Y
+        # self.world_X
+
 
         self.count = 0
         self._stop = False
