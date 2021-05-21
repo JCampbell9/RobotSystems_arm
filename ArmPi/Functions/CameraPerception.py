@@ -73,23 +73,28 @@ class Perception:
 
         frame_lab = self.convert_to_lab(frame_gb)
 
+        max_area = 0
+
         for i in color_range:
             if i in self.target_color:
                 detect_color = i
                 frame_mask = self.mask(frame_lab, detect_color=detect_color)
 
                 contours = self.get_contours(frame_mask)
-                area_max_contour, area_max= self.get_area_max_contour(contours)
-        
+                area_max_contour, area_max = self.get_area_max_contour(contours)
+                if area_max > max_area:
+                    max_area = area_max
+                    color_area_max = i
+                    area_max_contour_max = area_max_contour
+
         if area_max > 2500:
 
-            box = self.find_block(area_max_contour=area_max_contour)
+            box = self.find_block(area_max_contour=area_max_contour_max)
             self.get_block_location()
-            self.draw_roi_indicators(detect_color, box)
+            self.draw_roi_indicators(color_area_max, box)
 
         return self.img
 
-    
     def get_contours(self, frame_mask):
         
         opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
