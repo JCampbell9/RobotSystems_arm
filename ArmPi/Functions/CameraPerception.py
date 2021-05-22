@@ -59,6 +59,11 @@ class Perception:
         self.block_coordinates = (0, 0)
 
     def main(self, img):
+        """
+        This main file runs the process for detecting a block in the image
+        :param img: and image form the camera
+        :return: an image with the added lines, and world coordinates for the center of the block
+        """
         
         self.img = img
         self.img_copy = self.img.copy()
@@ -93,9 +98,14 @@ class Perception:
             self.get_block_location()
             self.draw_roi_indicators(color_area_max, box)
 
-        return self.img
+        return self.img, (self.world_x, self.world_y)
 
     def get_contours(self, frame_mask):
+        """
+        detects the contours
+        :param frame_mask: masked image
+        :return: the contours
+        """
         
         opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
         closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # Closed operation
@@ -104,13 +114,20 @@ class Perception:
         return contours
 
     def frame_resize(self):
-        
+        """
+        Resizes the image
+        :return: a resized image
+        """
         frame_resize = cv2.resize(self.img_copy, self.size, interpolation=cv2.INTER_NEAREST)
         frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
         return frame_gb
     
     def get_area_max_contour(self, contours):
-
+        """
+        gets the largest contour
+        :param contours: contours
+        :return: the largest contour
+        """
         contour_area_temp = 0
         contour_area_max = 0
         area_max_contour = None
@@ -126,22 +143,41 @@ class Perception:
 
 
     def crosshairs(self):
-        
+        """
+        adds crosshairs to the image indicating the center of the camera
+        :return: image with crosshairs added
+        """
         cv2.line(self.img, (0, int(self.img_dim[0] / 2)), (self.img_dim[1], int(self.img_dim[0] / 2)), (0, 0, 200), 1)
         cv2.line(self.img, (int(self.img_dim[1] / 2), 0), (int(self.img_dim[1] / 2), self.img_dim[0]), (0, 0, 200), 1)
 
 
     def convert_to_lab(self, frame_gb):
+        """
+        converts the color to LAB
+        :param frame_gb: base image
+        :return: converted image to LAB space
+        """
 
         return cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)
 
 
     def mask(self, frame_lab, detect_color):
+        """
+        creates an image with a mask
+        :param frame_lab: image converted to LAB color space
+        :param detect_color: the target color
+        :return: a masked image
+        """
         frame_mask = cv2.inRange(frame_lab, color_range[detect_color][0], color_range[detect_color][1])
         return frame_mask
     
     
     def find_block(self, area_max_contour):
+        """
+        finds the target block
+        :param area_max_contour: takes the max contour
+        :return: a box that represents the block
+        """
         self.rect = cv2.minAreaRect(area_max_contour)
         box = np.int0(cv2.boxPoints(self.rect))
 
@@ -152,18 +188,25 @@ class Perception:
     
     
     def get_block_location(self):
-
+        """
+        gets the center of the block
+        :return: world location
+        """
         img_centerx, img_centery = getCenter(self.rect, self.roi, self.size, square_length)  # Get the center coordinates of the block
         self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, self.size)  # Convert to real world coordinates
 
 
     def draw_roi_indicators(self, detect_color, box):
-
+        """
+        Draws the box onto hte image
+        :param detect_color: the target color
+        :param box: the box
+        :return: image with added markings
+        """
 
         cv2.drawContours(self.img, [box], -1, self.range_rgb[detect_color], 2)
         cv2.putText(self.img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1)  # Draw center point
-
 
 
 
@@ -181,7 +224,7 @@ if __name__ == '__main__':
         img = my_camera.frame
         if img is not None:
             frame = img.copy()
-            Frame = camera_perception.main(frame)
+            Frame, coordinates = camera_perception.main(frame)
             cv2.imshow('Frame', Frame)
             key = cv2.waitKey(1)
             if key == 27:
