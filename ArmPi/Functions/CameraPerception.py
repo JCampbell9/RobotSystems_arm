@@ -98,7 +98,7 @@ class Perception:
             self.get_block_location()
             self.draw_roi_indicators(color_area_max, box)
 
-        return self.img, (self.world_x, self.world_y)
+        return self.img, (self.world_x, self.world_y), self.rect,
 
     def get_contours(self, frame_mask):
         """

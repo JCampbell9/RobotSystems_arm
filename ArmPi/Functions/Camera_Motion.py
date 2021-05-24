@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # coding=utf8
 import sys
-# sys.path.append('/home/pi/ArmPi/')
-sys.path.append('/Users/socce/Desktop/git_repos/RobotSystems_arm/ArmPi/')
+sys.path.append('/home/pi/ArmPi/')
+# sys.path.append('/Users/socce/Desktop/git_repos/RobotSystems_arm/ArmPi/')
 import cv2
 import time
 import Camera
