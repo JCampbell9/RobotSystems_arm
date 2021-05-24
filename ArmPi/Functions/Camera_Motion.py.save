@@ -93,3 +93,7 @@ class MoveBlock:
             time.sleep(time_delay)
 
 
+
+if __name__ == '__main__':
+	motion = MoveBlock()
+	motion.main(

@@ -98,7 +98,7 @@ class Perception:
             self.get_block_location()
             self.draw_roi_indicators(color_area_max, box)
 
-        return self.img, (self.world_x, self.world_y), self.rect,
+        return self.img, (self.world_x, self.world_y), self.rect
 
     def get_contours(self, frame_mask):
         """
@@ -224,10 +224,11 @@ if __name__ == '__main__':
         img = my_camera.frame
         if img is not None:
             frame = img.copy()
-            Frame, coordinates = camera_perception.main(frame)
+            Frame, coordinates, _ = camera_perception.main(frame)
             cv2.imshow('Frame', Frame)
             key = cv2.waitKey(1)
             if key == 27:
                 break
+            print(f'\n\n Coordinates: {coordinates} \n\n')
     my_camera.camera_close()
     cv2.destroyAllWindows()
